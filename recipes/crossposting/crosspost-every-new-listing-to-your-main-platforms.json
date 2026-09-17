@@ -1,0 +1,21 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Crosspost every new listing to your main platforms",
+  "description": "The reason most people are here. Edit `targetPlatforms` to the ones you are actually connected to — an unconnected platform is a failed job, not a silent skip.",
+  "trigger": {
+    "type": "listing.created",
+    "config": {}
+  },
+  "action": {
+    "type": "listing.expand_platforms",
+    "config": {
+      "targetPlatforms": [
+        "poshmark",
+        "mercari",
+        "depop",
+        "ebay"
+      ]
+    }
+  }
+}

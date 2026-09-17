@@ -1,0 +1,19 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Chase anything unshipped after three days",
+  "description": "Catches the order that never made it onto your desk — the one where the notification arrived while you were driving and was never seen again.",
+  "trigger": {
+    "type": "order.unshipped_after",
+    "config": {
+      "daysOverdue": 3
+    }
+  },
+  "action": {
+    "type": "notify.email_user",
+    "config": {
+      "subject": "Unshipped for 3 days",
+      "body": "Order {{order.id}} on {{order.platform}} has not shipped. Still have it?"
+    }
+  }
+}

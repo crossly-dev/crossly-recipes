@@ -1,0 +1,21 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Hold the median of comparable sold listings",
+  "description": "For commodity stock where you are not trying to win on price, only to not be the outlier. `minSampleSize` matters: repricing off one comparable is repricing off a coincidence.",
+  "trigger": {
+    "type": "schedule.daily",
+    "config": {
+      "hourUtc": 9
+    }
+  },
+  "action": {
+    "type": "listing.reprice",
+    "config": {
+      "strategy": "median",
+      "percentOfMedian": 100,
+      "minSampleSize": 5,
+      "minChangeCents": 200
+    }
+  }
+}

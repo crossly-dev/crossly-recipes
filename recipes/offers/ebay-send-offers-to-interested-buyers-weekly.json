@@ -1,0 +1,23 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "eBay: send offers to interested buyers, weekly",
+  "description": "eBay surfaces buyers who watched or abandoned a cart. This asks them, once a week, at a real discount. `minEligibleBuyerCount` stops it firing at an audience of one.",
+  "trigger": {
+    "type": "schedule.cron",
+    "config": {
+      "cron": "0 18 * * 3"
+    }
+  },
+  "action": {
+    "type": "listing.ebay_send_offer_to_interested_buyers",
+    "config": {
+      "discountPercent": 10,
+      "maxListingsPerRun": 50,
+      "durationHours": 48,
+      "allowCounterOffer": true,
+      "minEligibleBuyerCount": 2,
+      "message": "Thanks for watching — here is 10% off for the next two days."
+    }
+  }
+}

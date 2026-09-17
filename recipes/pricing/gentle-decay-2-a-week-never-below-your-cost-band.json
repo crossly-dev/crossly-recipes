@@ -1,0 +1,22 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Gentle decay: 2% a week, never below your cost band",
+  "description": "For sellers who would rather not see a listing jump 15% overnight. Small and frequent reads as ordinary price movement to a returning buyer; one big cut reads as desperation and teaches them to wait for the next one.",
+  "trigger": {
+    "type": "schedule.cron",
+    "config": {
+      "cron": "0 10 * * 1"
+    }
+  },
+  "action": {
+    "type": "listing.reprice",
+    "config": {
+      "strategy": "decay",
+      "decayPct": 2,
+      "floorIsNet": true,
+      "floorCents": 1500,
+      "minChangeCents": 50
+    }
+  }
+}

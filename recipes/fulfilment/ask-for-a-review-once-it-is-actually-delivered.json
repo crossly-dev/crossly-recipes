@@ -1,0 +1,16 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Ask for a review once it is actually delivered",
+  "description": "On delivery, not on shipment. Asking while the parcel is still in transit is the fastest way to get a review about the courier.",
+  "trigger": {
+    "type": "order.delivered",
+    "config": {}
+  },
+  "action": {
+    "type": "inbox.send_message",
+    "config": {
+      "template": "Hope it arrived safely! If you are happy with it, a quick review really helps a small shop like mine. Any problems at all, message me first and I will sort it."
+    }
+  }
+}

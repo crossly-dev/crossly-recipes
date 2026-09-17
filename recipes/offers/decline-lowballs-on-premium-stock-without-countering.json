@@ -1,0 +1,27 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Decline lowballs on premium stock without countering",
+  "description": "The exception to \"always counter\". On genuinely scarce items a counter signals the price is soft, and it is not. Declines cleanly and leaves the asking price standing.",
+  "trigger": {
+    "type": "inbox.offer_received",
+    "config": {}
+  },
+  "condition": {
+    "type": "listing.has_tags",
+    "config": {
+      "tags": [
+        "premium",
+        "rare"
+      ],
+      "matchAll": false
+    }
+  },
+  "action": {
+    "type": "inbox.auto_decline_low_offer",
+    "config": {
+      "minAcceptablePercent": 90,
+      "useNetPayout": true
+    }
+  }
+}

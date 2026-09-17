@@ -1,0 +1,17 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Shout when an order is overdue",
+  "description": "Deliberately louder than the reminder above. By the time this fires the metric damage has started, so it goes to email rather than a chat channel you may have muted.",
+  "trigger": {
+    "type": "order.ship_by_overdue",
+    "config": {}
+  },
+  "action": {
+    "type": "notify.email_user",
+    "config": {
+      "subject": "OVERDUE: an order has passed its ship-by date",
+      "body": "Order {{order.id}} on {{order.platform}} is past its ship-by date. Shipping it now limits the damage; cancelling costs more than a late ship on most platforms."
+    }
+  }
+}

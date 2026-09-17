@@ -1,0 +1,20 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Follow sellers in your niche",
+  "description": "Proactive rather than reciprocal: follows people who sell the brand you sell, whose followers are your buyers. Set `brand` to something you actually stock.",
+  "trigger": {
+    "type": "schedule.daily",
+    "config": {
+      "hourUtc": 15
+    }
+  },
+  "action": {
+    "type": "social.brand_follow_proactive",
+    "config": {
+      "brand": "REPLACE_WITH_A_BRAND_YOU_SELL",
+      "platform": "poshmark",
+      "maxFollowsPerRun": 25
+    }
+  }
+}

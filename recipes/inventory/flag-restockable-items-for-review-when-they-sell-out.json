@@ -1,0 +1,25 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Flag restockable items for review when they sell out",
+  "description": "Tags rather than reorders. Nothing here knows your supplier or your margins, so the useful automation is to put it in front of you, not to act for you.",
+  "trigger": {
+    "type": "inventory.zero_qty",
+    "config": {}
+  },
+  "condition": {
+    "type": "listing.has_tags",
+    "config": {
+      "tags": [
+        "restockable"
+      ],
+      "matchAll": false
+    }
+  },
+  "action": {
+    "type": "listing.add_tag",
+    "config": {
+      "tag": "needs-restock"
+    }
+  }
+}

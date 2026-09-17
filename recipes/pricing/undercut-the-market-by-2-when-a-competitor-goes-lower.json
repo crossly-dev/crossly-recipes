@@ -1,0 +1,23 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Undercut the market by 2% when a competitor goes lower",
+  "description": "Reacts to the market rather than the calendar. `minChangeCents` stops a penny war: without it, two sellers running this same recipe against each other will repost all day for 1c at a time and both end up at the floor.",
+  "trigger": {
+    "type": "market.competitor_underprice",
+    "config": {
+      "minDeltaPercent": 3
+    }
+  },
+  "action": {
+    "type": "listing.reprice",
+    "config": {
+      "strategy": "undercut",
+      "undercutByPct": 2,
+      "minChangeCents": 100,
+      "minSampleSize": 3,
+      "floorIsNet": true,
+      "floorCents": 1200
+    }
+  }
+}

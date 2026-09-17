@@ -1,0 +1,19 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Daily sales digest to Slack",
+  "description": "A once-a-day summary instead of a ping per sale. Per-sale notifications are exciting for a week and muted forever after, which means you also miss the ones that matter.",
+  "trigger": {
+    "type": "schedule.daily",
+    "config": {
+      "hourUtc": 23
+    }
+  },
+  "action": {
+    "type": "notify.slack",
+    "config": {
+      "integrationId": "REPLACE_WITH_INTEGRATION_ID",
+      "template": "Today: {{stats.salesCount}} sales, {{stats.grossFormatted}} gross."
+    }
+  }
+}

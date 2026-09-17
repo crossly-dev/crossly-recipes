@@ -1,0 +1,18 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Share to the community pool",
+  "description": "Other Crossly sellers share your items and you share theirs. Reach you cannot get alone, and the cap keeps your account looking human.",
+  "trigger": {
+    "type": "schedule.interval",
+    "config": {
+      "intervalMinutes": 180
+    }
+  },
+  "action": {
+    "type": "network.share_pool",
+    "config": {
+      "maxSharesPerRun": 30
+    }
+  }
+}

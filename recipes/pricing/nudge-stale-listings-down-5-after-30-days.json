@@ -1,0 +1,21 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Nudge stale listings down 5% after 30 days",
+  "description": "The workhorse. Anything sitting a month gets a small cut with a floor, so it keeps moving without you watching it. The floor is the point — without one, a repeating discount walks a price to nothing over a long enough listing life.",
+  "trigger": {
+    "type": "listing.age_reached",
+    "config": {
+      "ageDays": 30
+    }
+  },
+  "action": {
+    "type": "listing.price_drop",
+    "config": {
+      "mode": "percent",
+      "percent": 5,
+      "floor": 12,
+      "minDaysListed": 30
+    }
+  }
+}

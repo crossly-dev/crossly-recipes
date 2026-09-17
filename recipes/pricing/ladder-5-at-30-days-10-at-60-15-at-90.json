@@ -1,0 +1,21 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Ladder: 5% at 30 days, 10% at 60, 15% at 90",
+  "description": "Three rules, not one. Import all three — each fires at its own age and they compound into a ladder. Kept as separate recipes rather than one clever rule because you will want to turn off the aggressive end without losing the gentle one.",
+  "trigger": {
+    "type": "listing.age_reached",
+    "config": {
+      "ageDays": 60
+    }
+  },
+  "action": {
+    "type": "listing.price_drop",
+    "config": {
+      "mode": "percent",
+      "percent": 10,
+      "floor": 12,
+      "minDaysListed": 60
+    }
+  }
+}

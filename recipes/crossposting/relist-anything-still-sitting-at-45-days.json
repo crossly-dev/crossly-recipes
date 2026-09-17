@@ -1,0 +1,23 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Relist anything still sitting at 45 days",
+  "description": "On several marketplaces a relist resets the listing date and puts an item back into the newest-first feed, which is most of where discovery comes from. Cheaper than a discount and often works better.",
+  "trigger": {
+    "type": "listing.age_reached",
+    "config": {
+      "ageDays": 45
+    }
+  },
+  "action": {
+    "type": "listing.auto_relist",
+    "config": {
+      "minDaysListed": 45,
+      "copyPhotos": true,
+      "platforms": [
+        "poshmark",
+        "depop"
+      ]
+    }
+  }
+}

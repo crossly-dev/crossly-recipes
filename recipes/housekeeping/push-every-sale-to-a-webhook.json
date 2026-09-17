@@ -1,0 +1,17 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Push every sale to a webhook",
+  "description": "For anyone wiring Crossly into their own system — a spreadsheet, an accounting tool, a Discord bot they wrote. The generic escape hatch when no built-in integration fits.",
+  "trigger": {
+    "type": "listing.sold",
+    "config": {}
+  },
+  "action": {
+    "type": "notify.webhook",
+    "config": {
+      "integrationId": "REPLACE_WITH_INTEGRATION_ID",
+      "template": "{\"event\":\"sale\",\"platform\":\"{{order.platform}}\",\"orderId\":\"{{order.id}}\",\"title\":\"{{listing.title}}\"}"
+    }
+  }
+}

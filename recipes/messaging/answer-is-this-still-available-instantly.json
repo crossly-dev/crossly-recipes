@@ -1,0 +1,18 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Answer \"is this still available?\" instantly",
+  "description": "The most common message on every marketplace and the one where reply speed decides the sale. Uses intent detection rather than keyword matching, so it catches the twenty ways people phrase it.",
+  "trigger": {
+    "type": "inbox.message_received",
+    "config": {
+      "intent": "availability"
+    }
+  },
+  "action": {
+    "type": "inbox.send_message",
+    "config": {
+      "template": "Yes, it is still available and ready to ship! Let me know if you would like more photos or measurements."
+    }
+  }
+}

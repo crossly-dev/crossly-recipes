@@ -1,0 +1,14 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Follow the buyer after a sale",
+  "description": "On closet-style platforms a follow after purchase is how repeat buyers happen. Low effort, and the follow-back rate from someone who just bought from you is the highest you will see.",
+  "trigger": {
+    "type": "listing.sold",
+    "config": {}
+  },
+  "action": {
+    "type": "social.follow_buyer",
+    "config": {}
+  }
+}

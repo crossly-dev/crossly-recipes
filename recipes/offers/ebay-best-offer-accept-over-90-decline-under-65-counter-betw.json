@@ -1,0 +1,18 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "eBay best offer: accept over 90%, decline under 65%, counter between",
+  "description": "eBay's own auto-respond, driven from Crossly so the thresholds live with the rest of your rules instead of in a separate screen you forget exists.",
+  "trigger": {
+    "type": "inbox.ebay_offer_received",
+    "config": {}
+  },
+  "action": {
+    "type": "inbox.ebay_best_offer_auto_respond",
+    "config": {
+      "acceptAbove": 90,
+      "declineBelow": 65,
+      "counter": 82
+    }
+  }
+}

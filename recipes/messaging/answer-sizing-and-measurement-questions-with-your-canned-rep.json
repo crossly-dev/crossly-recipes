@@ -1,0 +1,18 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Answer sizing and measurement questions with your canned reply",
+  "description": "Points at a canned response you write once. Replace `cannedId` with yours — the recipe cannot know your id, and importing it without editing will fail validation rather than send a blank message.",
+  "trigger": {
+    "type": "inbox.message_received",
+    "config": {
+      "intent": "sizing"
+    }
+  },
+  "action": {
+    "type": "inbox.send_canned",
+    "config": {
+      "cannedId": "REPLACE_WITH_YOUR_CANNED_ID"
+    }
+  }
+}

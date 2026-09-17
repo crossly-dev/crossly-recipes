@@ -1,0 +1,21 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Raise the price 5% on anything getting a lot of attention",
+  "description": "The direction nobody automates and everybody should. If an item is pulling views well above your norm, it is underpriced — and finding out by selling it in an hour is the expensive way.",
+  "trigger": {
+    "type": "listing.metric_threshold",
+    "config": {
+      "metric": "views",
+      "operator": "gte",
+      "value": 200
+    }
+  },
+  "action": {
+    "type": "listing.price_raise",
+    "config": {
+      "mode": "percent",
+      "percent": 5
+    }
+  }
+}

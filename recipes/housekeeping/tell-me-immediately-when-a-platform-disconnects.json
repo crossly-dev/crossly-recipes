@@ -1,0 +1,16 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Tell me immediately when a platform disconnects",
+  "description": "The highest-value notification in the whole list. A disconnected platform fails silently — crossposts stop, sales stop importing, delists stop — and the usual way people find out is noticing a week of no sales. Sessions expire constantly; this is not an edge case.",
+  "trigger": {
+    "type": "platform.disconnected",
+    "config": {}
+  },
+  "action": {
+    "type": "notify.telegram",
+    "config": {
+      "template": "{{platform}} disconnected. Crossposts, sales import and delists are stopped for it until you reconnect."
+    }
+  }
+}

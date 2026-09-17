@@ -1,0 +1,872 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "recipes": [
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Thank every buyer the moment they purchase",
+      "description": "Costs nothing, measurably moves review rate. Sent on sale detection, so it fires whichever marketplace the sale came from.",
+      "trigger": {
+        "type": "listing.sold",
+        "config": {}
+      },
+      "action": {
+        "type": "inbox.send_thank_you",
+        "config": {
+          "template": "Thank you so much for your order! It will be packed and shipped within one business day, and you will get tracking as soon as it moves. Any questions at all, just reply here."
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Archive obvious scams before you ever see them",
+      "description": "The \"is this still available, text me at\" genre. Scored and archived rather than deleted, so a false positive is recoverable — which matters, because the score is a heuristic and a real buyer who writes tersely can trip it.",
+      "trigger": {
+        "type": "inbox.message_received",
+        "config": {}
+      },
+      "action": {
+        "type": "inbox.archive_scam",
+        "config": {
+          "scamScoreThreshold": 75
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Answer \"is this still available?\" instantly",
+      "description": "The most common message on every marketplace and the one where reply speed decides the sale. Uses intent detection rather than keyword matching, so it catches the twenty ways people phrase it.",
+      "trigger": {
+        "type": "inbox.message_received",
+        "config": {
+          "intent": "availability"
+        }
+      },
+      "action": {
+        "type": "inbox.send_message",
+        "config": {
+          "template": "Yes, it is still available and ready to ship! Let me know if you would like more photos or measurements."
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Answer sizing and measurement questions with your canned reply",
+      "description": "Points at a canned response you write once. Replace `cannedId` with yours — the recipe cannot know your id, and importing it without editing will fail validation rather than send a blank message.",
+      "trigger": {
+        "type": "inbox.message_received",
+        "config": {
+          "intent": "sizing"
+        }
+      },
+      "action": {
+        "type": "inbox.send_canned",
+        "config": {
+          "cannedId": "REPLACE_WITH_YOUR_CANNED_ID"
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Follow the buyer after a sale",
+      "description": "On closet-style platforms a follow after purchase is how repeat buyers happen. Low effort, and the follow-back rate from someone who just bought from you is the highest you will see.",
+      "trigger": {
+        "type": "listing.sold",
+        "config": {}
+      },
+      "action": {
+        "type": "social.follow_buyer",
+        "config": {}
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Auto-decline anything under 60%, counter at 85%",
+      "description": "The lowball filter. Under 60% of asking is almost never a real buyer working up to a price and is usually a bot; countering it anyway costs nothing and occasionally converts. Uses NET payout, so the percentages mean what you think after fees.",
+      "trigger": {
+        "type": "inbox.offer_received",
+        "config": {}
+      },
+      "action": {
+        "type": "inbox.offer_auto_respond",
+        "config": {
+          "acceptAtOrAbovePercent": 92,
+          "declineBelowPercent": 60,
+          "basis": "net",
+          "counterStrategy": "percent",
+          "counterPercent": 85,
+          "floorCents": 1200
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Offer 12% to everyone who liked an item",
+      "description": "The single highest-converting automation most resellers are not running. A like is the strongest buying signal a marketplace gives you, and an offer to a liker lands as an answer to a question they already asked. `excludeRecentOfferDays` keeps it from becoming nagging.",
+      "trigger": {
+        "type": "listing.liked",
+        "config": {}
+      },
+      "action": {
+        "type": "listing.send_offer_to_likers",
+        "config": {
+          "discountPercent": 12,
+          "shippingFree": true,
+          "minLikeCount": 1,
+          "excludeRecentOfferDays": 14
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "eBay best offer: accept over 90%, decline under 65%, counter between",
+      "description": "eBay's own auto-respond, driven from Crossly so the thresholds live with the rest of your rules instead of in a separate screen you forget exists.",
+      "trigger": {
+        "type": "inbox.ebay_offer_received",
+        "config": {}
+      },
+      "action": {
+        "type": "inbox.ebay_best_offer_auto_respond",
+        "config": {
+          "acceptAbove": 90,
+          "declineBelow": 65,
+          "counter": 82
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "eBay: send offers to interested buyers, weekly",
+      "description": "eBay surfaces buyers who watched or abandoned a cart. This asks them, once a week, at a real discount. `minEligibleBuyerCount` stops it firing at an audience of one.",
+      "trigger": {
+        "type": "schedule.cron",
+        "config": {
+          "cron": "0 18 * * 3"
+        }
+      },
+      "action": {
+        "type": "listing.ebay_send_offer_to_interested_buyers",
+        "config": {
+          "discountPercent": 10,
+          "maxListingsPerRun": 50,
+          "durationHours": 48,
+          "allowCounterOffer": true,
+          "minEligibleBuyerCount": 2,
+          "message": "Thanks for watching — here is 10% off for the next two days."
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Decline lowballs on premium stock without countering",
+      "description": "The exception to \"always counter\". On genuinely scarce items a counter signals the price is soft, and it is not. Declines cleanly and leaves the asking price standing.",
+      "trigger": {
+        "type": "inbox.offer_received",
+        "config": {}
+      },
+      "condition": {
+        "type": "listing.has_tags",
+        "config": {
+          "tags": [
+            "premium",
+            "rare"
+          ],
+          "matchAll": false
+        }
+      },
+      "action": {
+        "type": "inbox.auto_decline_low_offer",
+        "config": {
+          "minAcceptablePercent": 90,
+          "useNetPayout": true
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Crosspost every new listing to your main platforms",
+      "description": "The reason most people are here. Edit `targetPlatforms` to the ones you are actually connected to — an unconnected platform is a failed job, not a silent skip.",
+      "trigger": {
+        "type": "listing.created",
+        "config": {}
+      },
+      "action": {
+        "type": "listing.expand_platforms",
+        "config": {
+          "targetPlatforms": [
+            "poshmark",
+            "mercari",
+            "depop",
+            "ebay"
+          ]
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Crosspost only items above $25",
+      "description": "Crossposting has a real per-item cost in time and in platform limits. On low-value stock the fees and the shipping usually eat the difference, so this keeps the fan-out for items where it pays.",
+      "trigger": {
+        "type": "listing.created",
+        "config": {}
+      },
+      "condition": {
+        "type": "listing.price_above",
+        "config": {
+          "threshold": 25
+        }
+      },
+      "action": {
+        "type": "listing.expand_platforms",
+        "config": {
+          "targetPlatforms": [
+            "poshmark",
+            "mercari",
+            "ebay"
+          ]
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Relist anything still sitting at 45 days",
+      "description": "On several marketplaces a relist resets the listing date and puts an item back into the newest-first feed, which is most of where discovery comes from. Cheaper than a discount and often works better.",
+      "trigger": {
+        "type": "listing.age_reached",
+        "config": {
+          "ageDays": 45
+        }
+      },
+      "action": {
+        "type": "listing.auto_relist",
+        "config": {
+          "minDaysListed": 45,
+          "copyPhotos": true,
+          "platforms": [
+            "poshmark",
+            "depop"
+          ]
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Archive anything a year old with nothing to show for it",
+      "description": "Housekeeping nobody does by hand. An item that has been listed a year with almost no views is not priced wrong, it is the wrong item — and it is costing you listing slots and making your own analytics useless.",
+      "trigger": {
+        "type": "schedule.cron",
+        "config": {
+          "cron": "0 3 1 * *"
+        }
+      },
+      "action": {
+        "type": "listing.archive_stale",
+        "config": {
+          "olderThanDays": 365,
+          "viewsBelow": 25
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Share your whole closet twice a day",
+      "description": "On Poshmark, sharing is the feed. Twice a day at the hours buyers are actually browsing beats six times at 3am, and `delayMs` keeps it looking like a person rather than a script.",
+      "trigger": {
+        "type": "schedule.cron",
+        "config": {
+          "cron": "0 13,23 * * *"
+        }
+      },
+      "action": {
+        "type": "listing.share_closet",
+        "config": {
+          "maxItems": 200,
+          "delayMs": 2500,
+          "order": "oldest_first"
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Follow back everyone who follows you",
+      "description": "Reciprocity is most of how closet platforms distribute reach. Capped per run because follow bursts are exactly what rate limiters look for.",
+      "trigger": {
+        "type": "schedule.interval",
+        "config": {
+          "intervalMinutes": 240
+        }
+      },
+      "action": {
+        "type": "social.follow_back",
+        "config": {
+          "maxPerRun": 40
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Share to the community pool",
+      "description": "Other Crossly sellers share your items and you share theirs. Reach you cannot get alone, and the cap keeps your account looking human.",
+      "trigger": {
+        "type": "schedule.interval",
+        "config": {
+          "intervalMinutes": 180
+        }
+      },
+      "action": {
+        "type": "network.share_pool",
+        "config": {
+          "maxSharesPerRun": 30
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Follow sellers in your niche",
+      "description": "Proactive rather than reciprocal: follows people who sell the brand you sell, whose followers are your buyers. Set `brand` to something you actually stock.",
+      "trigger": {
+        "type": "schedule.daily",
+        "config": {
+          "hourUtc": 15
+        }
+      },
+      "action": {
+        "type": "social.brand_follow_proactive",
+        "config": {
+          "brand": "REPLACE_WITH_A_BRAND_YOU_SELL",
+          "platform": "poshmark",
+          "maxFollowsPerRun": 25
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Thank people who comment",
+      "description": "A comment is a public signal other buyers see. Replying keeps it at the top and makes the listing look alive, which is worth more than the reply itself.",
+      "trigger": {
+        "type": "listing.commented",
+        "config": {}
+      },
+      "action": {
+        "type": "inbox.send_message",
+        "config": {
+          "template": "Thanks for the comment! Happy to answer anything about this one."
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Warn me a day before a ship-by date",
+      "description": "Every marketplace punishes late shipping harder than it rewards fast shipping, and the penalty lands on placement rather than on the order. One notification the day before is the cheapest insurance in this list.",
+      "trigger": {
+        "type": "order.ship_by_soon",
+        "config": {}
+      },
+      "action": {
+        "type": "notify.telegram",
+        "config": {
+          "template": "Ship-by tomorrow: {{order.platform}} #{{order.id}} — {{listing.title}}"
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Shout when an order is overdue",
+      "description": "Deliberately louder than the reminder above. By the time this fires the metric damage has started, so it goes to email rather than a chat channel you may have muted.",
+      "trigger": {
+        "type": "order.ship_by_overdue",
+        "config": {}
+      },
+      "action": {
+        "type": "notify.email_user",
+        "config": {
+          "subject": "OVERDUE: an order has passed its ship-by date",
+          "body": "Order {{order.id}} on {{order.platform}} is past its ship-by date. Shipping it now limits the damage; cancelling costs more than a late ship on most platforms."
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Chase anything unshipped after three days",
+      "description": "Catches the order that never made it onto your desk — the one where the notification arrived while you were driving and was never seen again.",
+      "trigger": {
+        "type": "order.unshipped_after",
+        "config": {
+          "daysOverdue": 3
+        }
+      },
+      "action": {
+        "type": "notify.email_user",
+        "config": {
+          "subject": "Unshipped for 3 days",
+          "body": "Order {{order.id}} on {{order.platform}} has not shipped. Still have it?"
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Ask for a review once it is actually delivered",
+      "description": "On delivery, not on shipment. Asking while the parcel is still in transit is the fastest way to get a review about the courier.",
+      "trigger": {
+        "type": "order.delivered",
+        "config": {}
+      },
+      "action": {
+        "type": "inbox.send_message",
+        "config": {
+          "template": "Hope it arrived safely! If you are happy with it, a quick review really helps a small shop like mine. Any problems at all, message me first and I will sort it."
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Alert me the moment an order is disputed",
+      "description": "Disputes have clocks, and the clocks are short. This is the one notification worth interrupting you for.",
+      "trigger": {
+        "type": "order.disputed",
+        "config": {}
+      },
+      "action": {
+        "type": "notify.telegram",
+        "config": {
+          "template": "DISPUTE on {{order.platform}} #{{order.id}}. Response windows are short."
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Log returns to your CRM",
+      "description": "A return is a customer-history fact, not just an accounting one. Replace `integrationId` with your own CRM connection id.",
+      "trigger": {
+        "type": "order.returned",
+        "config": {}
+      },
+      "action": {
+        "type": "crm.push_buyer",
+        "config": {
+          "integrationId": "REPLACE_WITH_INTEGRATION_ID"
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Tell me immediately when a platform disconnects",
+      "description": "The highest-value notification in the whole list. A disconnected platform fails silently — crossposts stop, sales stop importing, delists stop — and the usual way people find out is noticing a week of no sales. Sessions expire constantly; this is not an edge case.",
+      "trigger": {
+        "type": "platform.disconnected",
+        "config": {}
+      },
+      "action": {
+        "type": "notify.telegram",
+        "config": {
+          "template": "{{platform}} disconnected. Crossposts, sales import and delists are stopped for it until you reconnect."
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Turn on vacation mode everywhere with one rule",
+      "description": "Flip this rule on before you travel instead of visiting six apps. Turning it OFF is a second import of the same recipe with `enabled: false` — kept as two so neither can fire by accident.",
+      "trigger": {
+        "type": "schedule.window",
+        "config": {
+          "startsAt": "2026-07-01T00:00:00Z",
+          "endsAt": "2026-07-14T00:00:00Z"
+        }
+      },
+      "action": {
+        "type": "account.toggle_vacation",
+        "config": {
+          "enabled": true,
+          "message": "Away until the 14th — orders placed now ship as soon as I am back. Thank you!"
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Daily sales digest to Slack",
+      "description": "A once-a-day summary instead of a ping per sale. Per-sale notifications are exciting for a week and muted forever after, which means you also miss the ones that matter.",
+      "trigger": {
+        "type": "schedule.daily",
+        "config": {
+          "hourUtc": 23
+        }
+      },
+      "action": {
+        "type": "notify.slack",
+        "config": {
+          "integrationId": "REPLACE_WITH_INTEGRATION_ID",
+          "template": "Today: {{stats.salesCount}} sales, {{stats.grossFormatted}} gross."
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Push every sale to a webhook",
+      "description": "For anyone wiring Crossly into their own system — a spreadsheet, an accounting tool, a Discord bot they wrote. The generic escape hatch when no built-in integration fits.",
+      "trigger": {
+        "type": "listing.sold",
+        "config": {}
+      },
+      "action": {
+        "type": "notify.webhook",
+        "config": {
+          "integrationId": "REPLACE_WITH_INTEGRATION_ID",
+          "template": "{\"event\":\"sale\",\"platform\":\"{{order.platform}}\",\"orderId\":\"{{order.id}}\",\"title\":\"{{listing.title}}\"}"
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Tell me before something runs out, not after",
+      "description": "Fires at the last unit rather than at zero. Zero is already a problem; one is a decision.",
+      "trigger": {
+        "type": "inventory.low_stock",
+        "config": {
+          "threshold": 1
+        }
+      },
+      "action": {
+        "type": "notify.telegram",
+        "config": {
+          "template": "Low stock: {{listing.title}} — {{inventory.quantity}} left."
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Delist everywhere when quantity hits zero",
+      "description": "The cancellation preventer. A sold-out listing left live on a second marketplace is an order you have to cancel, and a cancellation costs more than the sale was worth on most platforms.",
+      "trigger": {
+        "type": "inventory.zero_qty",
+        "config": {}
+      },
+      "action": {
+        "type": "listing.delist",
+        "config": {}
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Flag restockable items for review when they sell out",
+      "description": "Tags rather than reorders. Nothing here knows your supplier or your margins, so the useful automation is to put it in front of you, not to act for you.",
+      "trigger": {
+        "type": "inventory.zero_qty",
+        "config": {}
+      },
+      "condition": {
+        "type": "listing.has_tags",
+        "config": {
+          "tags": [
+            "restockable"
+          ],
+          "matchAll": false
+        }
+      },
+      "action": {
+        "type": "listing.add_tag",
+        "config": {
+          "tag": "needs-restock"
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Nudge stale listings down 5% after 30 days",
+      "description": "The workhorse. Anything sitting a month gets a small cut with a floor, so it keeps moving without you watching it. The floor is the point — without one, a repeating discount walks a price to nothing over a long enough listing life.",
+      "trigger": {
+        "type": "listing.age_reached",
+        "config": {
+          "ageDays": 30
+        }
+      },
+      "action": {
+        "type": "listing.price_drop",
+        "config": {
+          "mode": "percent",
+          "percent": 5,
+          "floor": 12,
+          "minDaysListed": 30
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Ladder: 5% at 30 days, 10% at 60, 15% at 90",
+      "description": "Three rules, not one. Import all three — each fires at its own age and they compound into a ladder. Kept as separate recipes rather than one clever rule because you will want to turn off the aggressive end without losing the gentle one.",
+      "trigger": {
+        "type": "listing.age_reached",
+        "config": {
+          "ageDays": 60
+        }
+      },
+      "action": {
+        "type": "listing.price_drop",
+        "config": {
+          "mode": "percent",
+          "percent": 10,
+          "floor": 12,
+          "minDaysListed": 60
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Ladder step three — 15% at 90 days",
+      "description": "The last step before you should be asking whether to relist or archive instead.",
+      "trigger": {
+        "type": "listing.age_reached",
+        "config": {
+          "ageDays": 90
+        }
+      },
+      "action": {
+        "type": "listing.price_drop",
+        "config": {
+          "mode": "percent",
+          "percent": 15,
+          "floor": 10,
+          "minDaysListed": 90
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Drop the price on anything with no views after two weeks",
+      "description": "Age alone is a blunt signal — an item can be three weeks old and getting looked at daily. No views after two weeks is the sharper one: nobody is even seeing it, so the price is not the only problem, but it is the one you can fix in a second.",
+      "trigger": {
+        "type": "listing.no_views_after",
+        "config": {
+          "ageDays": 14,
+          "maxViews": 5
+        }
+      },
+      "action": {
+        "type": "listing.price_drop",
+        "config": {
+          "mode": "percent",
+          "percent": 8,
+          "floor": 10
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Undercut the market by 2% when a competitor goes lower",
+      "description": "Reacts to the market rather than the calendar. `minChangeCents` stops a penny war: without it, two sellers running this same recipe against each other will repost all day for 1c at a time and both end up at the floor.",
+      "trigger": {
+        "type": "market.competitor_underprice",
+        "config": {
+          "minDeltaPercent": 3
+        }
+      },
+      "action": {
+        "type": "listing.reprice",
+        "config": {
+          "strategy": "undercut",
+          "undercutByPct": 2,
+          "minChangeCents": 100,
+          "minSampleSize": 3,
+          "floorIsNet": true,
+          "floorCents": 1200
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Hold the median of comparable sold listings",
+      "description": "For commodity stock where you are not trying to win on price, only to not be the outlier. `minSampleSize` matters: repricing off one comparable is repricing off a coincidence.",
+      "trigger": {
+        "type": "schedule.daily",
+        "config": {
+          "hourUtc": 9
+        }
+      },
+      "action": {
+        "type": "listing.reprice",
+        "config": {
+          "strategy": "median",
+          "percentOfMedian": 100,
+          "minSampleSize": 5,
+          "minChangeCents": 200
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Raise the price 5% on anything getting a lot of attention",
+      "description": "The direction nobody automates and everybody should. If an item is pulling views well above your norm, it is underpriced — and finding out by selling it in an hour is the expensive way.",
+      "trigger": {
+        "type": "listing.metric_threshold",
+        "config": {
+          "metric": "views",
+          "operator": "gte",
+          "value": 200
+        }
+      },
+      "action": {
+        "type": "listing.price_raise",
+        "config": {
+          "mode": "percent",
+          "percent": 5
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Weekend flash sale: 15% off Friday evening, back up Sunday night",
+      "description": "A timed discount that reverts on its own, so you are not relying on remembering. Set the dates each week, or point a cron at it. Times are ISO-8601 and are interpreted as written — edit them before importing.",
+      "trigger": {
+        "type": "schedule.cron",
+        "config": {
+          "cron": "0 17 * * 5",
+          "timezone": "America/New_York"
+        }
+      },
+      "action": {
+        "type": "listing.timed_discount",
+        "config": {
+          "percentOff": 15,
+          "startsAt": "2026-01-02T17:00:00-05:00",
+          "endsAt": "2026-01-04T21:00:00-05:00"
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Match the lowest listed price, with a floor",
+      "description": "Race-to-the-bottom by design, so the floor is doing all the work. Use on genuinely interchangeable stock where the buyer is sorting by price and nothing else. Do not use on anything where condition or photos are the differentiator.",
+      "trigger": {
+        "type": "schedule.interval",
+        "config": {
+          "intervalMinutes": 360
+        }
+      },
+      "condition": {
+        "type": "listing.has_tags",
+        "config": {
+          "tags": [
+            "commodity"
+          ],
+          "matchAll": false
+        }
+      },
+      "action": {
+        "type": "listing.sync_price_to_lowest",
+        "config": {
+          "floor": 15
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Bundle discount: 15% off when a buyer takes three",
+      "description": "Moves slow stock in groups and raises average order value without discounting anything on its own. Works best on same-category items a buyer would plausibly want together.",
+      "trigger": {
+        "type": "schedule.daily",
+        "config": {
+          "hourUtc": 8
+        }
+      },
+      "action": {
+        "type": "listing.bundle_promo",
+        "config": {
+          "itemsRequired": 3,
+          "percentOff": 15
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Gentle decay: 2% a week, never below your cost band",
+      "description": "For sellers who would rather not see a listing jump 15% overnight. Small and frequent reads as ordinary price movement to a returning buyer; one big cut reads as desperation and teaches them to wait for the next one.",
+      "trigger": {
+        "type": "schedule.cron",
+        "config": {
+          "cron": "0 10 * * 1"
+        }
+      },
+      "action": {
+        "type": "listing.reprice",
+        "config": {
+          "strategy": "decay",
+          "decayPct": 2,
+          "floorIsNet": true,
+          "floorCents": 1500,
+          "minChangeCents": 50
+        }
+      }
+    },
+    {
+      "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+      "schemaVersion": 1,
+      "name": "Premium hold — never discount tagged items",
+      "description": "Not an automation so much as a guard rail you can point at. Pair it with any ladder above by tagging the items you refuse to discount, so a blanket rule cannot reach them.",
+      "trigger": {
+        "type": "listing.age_reached",
+        "config": {
+          "ageDays": 45
+        }
+      },
+      "condition": {
+        "type": "listing.has_tags",
+        "config": {
+          "tags": [
+            "premium",
+            "rare"
+          ],
+          "matchAll": false
+        }
+      },
+      "action": {
+        "type": "listing.add_tag",
+        "config": {
+          "tag": "aged-review"
+        }
+      }
+    }
+  ]
+}

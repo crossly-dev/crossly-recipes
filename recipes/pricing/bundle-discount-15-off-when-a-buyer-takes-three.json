@@ -1,0 +1,19 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Bundle discount: 15% off when a buyer takes three",
+  "description": "Moves slow stock in groups and raises average order value without discounting anything on its own. Works best on same-category items a buyer would plausibly want together.",
+  "trigger": {
+    "type": "schedule.daily",
+    "config": {
+      "hourUtc": 8
+    }
+  },
+  "action": {
+    "type": "listing.bundle_promo",
+    "config": {
+      "itemsRequired": 3,
+      "percentOff": 15
+    }
+  }
+}

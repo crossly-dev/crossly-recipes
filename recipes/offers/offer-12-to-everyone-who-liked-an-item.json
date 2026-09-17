@@ -1,0 +1,19 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Offer 12% to everyone who liked an item",
+  "description": "The single highest-converting automation most resellers are not running. A like is the strongest buying signal a marketplace gives you, and an offer to a liker lands as an answer to a question they already asked. `excludeRecentOfferDays` keeps it from becoming nagging.",
+  "trigger": {
+    "type": "listing.liked",
+    "config": {}
+  },
+  "action": {
+    "type": "listing.send_offer_to_likers",
+    "config": {
+      "discountPercent": 12,
+      "shippingFree": true,
+      "minLikeCount": 1,
+      "excludeRecentOfferDays": 14
+    }
+  }
+}

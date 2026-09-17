@@ -1,0 +1,26 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Crosspost only items above $25",
+  "description": "Crossposting has a real per-item cost in time and in platform limits. On low-value stock the fees and the shipping usually eat the difference, so this keeps the fan-out for items where it pays.",
+  "trigger": {
+    "type": "listing.created",
+    "config": {}
+  },
+  "condition": {
+    "type": "listing.price_above",
+    "config": {
+      "threshold": 25
+    }
+  },
+  "action": {
+    "type": "listing.expand_platforms",
+    "config": {
+      "targetPlatforms": [
+        "poshmark",
+        "mercari",
+        "ebay"
+      ]
+    }
+  }
+}

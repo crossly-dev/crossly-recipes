@@ -1,0 +1,19 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Archive anything a year old with nothing to show for it",
+  "description": "Housekeeping nobody does by hand. An item that has been listed a year with almost no views is not priced wrong, it is the wrong item — and it is costing you listing slots and making your own analytics useless.",
+  "trigger": {
+    "type": "schedule.cron",
+    "config": {
+      "cron": "0 3 1 * *"
+    }
+  },
+  "action": {
+    "type": "listing.archive_stale",
+    "config": {
+      "olderThanDays": 365,
+      "viewsBelow": 25
+    }
+  }
+}

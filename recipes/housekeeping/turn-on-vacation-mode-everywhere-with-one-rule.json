@@ -1,0 +1,20 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Turn on vacation mode everywhere with one rule",
+  "description": "Flip this rule on before you travel instead of visiting six apps. Turning it OFF is a second import of the same recipe with `enabled: false` — kept as two so neither can fire by accident.",
+  "trigger": {
+    "type": "schedule.window",
+    "config": {
+      "startsAt": "2026-07-01T00:00:00Z",
+      "endsAt": "2026-07-14T00:00:00Z"
+    }
+  },
+  "action": {
+    "type": "account.toggle_vacation",
+    "config": {
+      "enabled": true,
+      "message": "Away until the 14th — orders placed now ship as soon as I am back. Thank you!"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Share your whole closet twice a day",
+  "description": "On Poshmark, sharing is the feed. Twice a day at the hours buyers are actually browsing beats six times at 3am, and `delayMs` keeps it looking like a person rather than a script.",
+  "trigger": {
+    "type": "schedule.cron",
+    "config": {
+      "cron": "0 13,23 * * *"
+    }
+  },
+  "action": {
+    "type": "listing.share_closet",
+    "config": {
+      "maxItems": 200,
+      "delayMs": 2500,
+      "order": "oldest_first"
+    }
+  }
+}

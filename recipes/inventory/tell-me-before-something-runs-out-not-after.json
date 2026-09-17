@@ -1,0 +1,18 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Tell me before something runs out, not after",
+  "description": "Fires at the last unit rather than at zero. Zero is already a problem; one is a decision.",
+  "trigger": {
+    "type": "inventory.low_stock",
+    "config": {
+      "threshold": 1
+    }
+  },
+  "action": {
+    "type": "notify.telegram",
+    "config": {
+      "template": "Low stock: {{listing.title}} — {{inventory.quantity}} left."
+    }
+  }
+}

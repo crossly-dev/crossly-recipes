@@ -1,0 +1,14 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Delist everywhere when quantity hits zero",
+  "description": "The cancellation preventer. A sold-out listing left live on a second marketplace is an order you have to cancel, and a cancellation costs more than the sale was worth on most platforms.",
+  "trigger": {
+    "type": "inventory.zero_qty",
+    "config": {}
+  },
+  "action": {
+    "type": "listing.delist",
+    "config": {}
+  }
+}

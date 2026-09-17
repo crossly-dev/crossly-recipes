@@ -1,0 +1,16 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Thank every buyer the moment they purchase",
+  "description": "Costs nothing, measurably moves review rate. Sent on sale detection, so it fires whichever marketplace the sale came from.",
+  "trigger": {
+    "type": "listing.sold",
+    "config": {}
+  },
+  "action": {
+    "type": "inbox.send_thank_you",
+    "config": {
+      "template": "Thank you so much for your order! It will be packed and shipped within one business day, and you will get tracking as soon as it moves. Any questions at all, just reply here."
+    }
+  }
+}

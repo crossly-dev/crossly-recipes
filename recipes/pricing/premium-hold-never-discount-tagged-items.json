@@ -1,0 +1,28 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Premium hold — never discount tagged items",
+  "description": "Not an automation so much as a guard rail you can point at. Pair it with any ladder above by tagging the items you refuse to discount, so a blanket rule cannot reach them.",
+  "trigger": {
+    "type": "listing.age_reached",
+    "config": {
+      "ageDays": 45
+    }
+  },
+  "condition": {
+    "type": "listing.has_tags",
+    "config": {
+      "tags": [
+        "premium",
+        "rare"
+      ],
+      "matchAll": false
+    }
+  },
+  "action": {
+    "type": "listing.add_tag",
+    "config": {
+      "tag": "aged-review"
+    }
+  }
+}

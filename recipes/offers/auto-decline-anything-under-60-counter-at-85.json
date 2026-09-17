@@ -1,0 +1,21 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Auto-decline anything under 60%, counter at 85%",
+  "description": "The lowball filter. Under 60% of asking is almost never a real buyer working up to a price and is usually a bot; countering it anyway costs nothing and occasionally converts. Uses NET payout, so the percentages mean what you think after fees.",
+  "trigger": {
+    "type": "inbox.offer_received",
+    "config": {}
+  },
+  "action": {
+    "type": "inbox.offer_auto_respond",
+    "config": {
+      "acceptAtOrAbovePercent": 92,
+      "declineBelowPercent": 60,
+      "basis": "net",
+      "counterStrategy": "percent",
+      "counterPercent": 85,
+      "floorCents": 1200
+    }
+  }
+}

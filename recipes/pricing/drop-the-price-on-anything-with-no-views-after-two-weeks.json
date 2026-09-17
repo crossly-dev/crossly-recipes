@@ -1,0 +1,21 @@
+{
+  "$schema": "https://crossly.net/schemas/automation-recipe-v1.json",
+  "schemaVersion": 1,
+  "name": "Drop the price on anything with no views after two weeks",
+  "description": "Age alone is a blunt signal — an item can be three weeks old and getting looked at daily. No views after two weeks is the sharper one: nobody is even seeing it, so the price is not the only problem, but it is the one you can fix in a second.",
+  "trigger": {
+    "type": "listing.no_views_after",
+    "config": {
+      "ageDays": 14,
+      "maxViews": 5
+    }
+  },
+  "action": {
+    "type": "listing.price_drop",
+    "config": {
+      "mode": "percent",
+      "percent": 8,
+      "floor": 10
+    }
+  }
+}
